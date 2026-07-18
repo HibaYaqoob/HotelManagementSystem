@@ -37,7 +37,7 @@ namespace Task8
     // --------------------------------------------------------------
     public class Guest
     {
-        public int guestId;
+        public string guestId;
         public string guestName;
         public int roomNumber;
         public string checkInDate;
@@ -45,7 +45,7 @@ namespace Task8
         public double pricePerNight;
 
         // Constructor
-        public Guest(int id, string name, int room, string date, int nights, double price)
+        public Guest(string id, string name, int room, string date, int nights, double price)
         {
             guestId = id;
             guestName = name;
@@ -110,13 +110,11 @@ namespace Task8
                 switch (choice)
                 {
                     case 1:
-                        // AddRoom();
-                        Console.WriteLine("Add Room feature coming soon.");
+                        AddRoom();
                         break;
 
                     case 2:
-                        // AddGuest();
-                        Console.WriteLine("Register Guest feature coming soon.");
+                         AddGuest();
                         break;
 
                     case 3:
@@ -154,6 +152,151 @@ namespace Task8
             rooms.Add(new Room(104, "Single", 25, true));
             rooms.Add(new Room(105, "Double", 45, true));
             rooms.Add(new Room(106, "Suite", 100, true));
+        }
+
+        // --------------------------------------------------------------
+        //Case 1: Add New Room
+        // --------------------------------------------------------------
+        static void AddRoom()
+        {
+            Console.WriteLine("\n----- Add New Room -----");
+
+            int roomNumber;
+            double price;
+
+            // Validate Room Number
+            while (true)
+            {
+                Console.Write("Enter room number: ");
+
+                if (int.TryParse(Console.ReadLine(), out roomNumber) && roomNumber > 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid room number. Must be a positive number.");
+            }
+
+
+            // Check duplicate room number using LINQ Any()
+            bool exists = rooms.Any(r => r.roomNumber == roomNumber);
+
+            if (exists)
+            {
+                Console.WriteLine("Error: Room number already exists.");
+                return;
+            }
+
+
+            // Enter Room Type
+            Console.Write("Enter room type (Single / Double / Suite): ");
+            string roomType = Console.ReadLine();
+
+
+            // Validate Price
+            while (true)
+            {
+                Console.Write("Enter price per night: ");
+
+                if (double.TryParse(Console.ReadLine(), out price) && price > 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid price. Must be a positive number.");
+            }
+
+
+            // Create new Room object
+            Room newRoom = new Room(
+                roomNumber,
+                roomType,
+                price,
+                true
+            );
+
+
+            // Add room to list
+            rooms.Add(newRoom);
+
+
+            // Success message
+            Console.WriteLine("\nRoom added successfully!");
+            Console.WriteLine("------------------------");
+            Console.WriteLine("Room Number: " + newRoom.roomNumber);
+            Console.WriteLine("Room Type: " + newRoom.roomType);
+            Console.WriteLine("Price Per Night: " + newRoom.pricePerNight);
+            Console.WriteLine("Available: " + newRoom.isAvailable);
+            Console.WriteLine("Total Rooms: " + rooms.Count);
+        }
+
+        // --------------------------------------------------------------
+        // Case 2: Register New Guest
+        // --------------------------------------------------------------
+        static void AddGuest()
+        {
+            Console.WriteLine("\n----- Register New Guest -----");
+
+
+            // Auto generate Guest ID
+            string guestId = "G" + (guests.Count() + 1).ToString("D3");
+
+
+            // Guest Name
+            Console.Write("Enter guest name: ");
+            string guestName = Console.ReadLine();
+
+
+            // Check-in Date
+            Console.Write("Enter check-in date (Example: 19/07/2026): ");
+            string checkInDate = Console.ReadLine();
+
+
+            // Validate number of nights
+            int totalNights;
+
+            while (true)
+            {
+                Console.Write("Enter number of nights: ");
+
+                if (int.TryParse(Console.ReadLine(), out totalNights)
+                    && totalNights > 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid number of nights. Must be positive.");
+            }
+
+
+            // Room not assigned yet
+            int roomNumber = 0;
+
+
+            // Create Guest object
+            Guest newGuest = new Guest(
+                guestId,
+                guestName,
+                roomNumber,
+                checkInDate,
+                totalNights,
+                0
+            );
+
+
+            // Add guest to list
+            guests.Add(newGuest);
+
+
+            // Confirmation
+            Console.WriteLine("\nGuest registered successfully!");
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine("Guest ID: " + newGuest.guestId);
+            Console.WriteLine("Guest Name: " + newGuest.guestName);
+            Console.WriteLine("Check-in Date: " + newGuest.checkInDate);
+            Console.WriteLine("Total Nights: " + newGuest.totalNights);
+            Console.WriteLine("Room Number: Not Assigned");
+            Console.WriteLine("Total Guests: " + guests.Count());
         }
 
         // --------------------------------------------------------------
