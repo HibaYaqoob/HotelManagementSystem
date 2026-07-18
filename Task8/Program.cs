@@ -1,9 +1,11 @@
-﻿namespace Task8
-{
+﻿using System;
+using System.Collections.Generic;
 
+namespace Task8
+{
     // --------------------------------------------------------------
-    // Room Class:
-    // -------------------------------------------------------------
+    // Room Class
+    // --------------------------------------------------------------
     public class Room
     {
         public int roomNumber;
@@ -20,7 +22,7 @@
             isAvailable = available;
         }
 
-        // Method to display room details
+        // Display room details
         public void displayRoom()
         {
             Console.WriteLine("Room Number: " + roomNumber);
@@ -31,9 +33,8 @@
     }
 
     // --------------------------------------------------------------
-    // Guest Class:
+    // Guest Class
     // --------------------------------------------------------------
-
     public class Guest
     {
         public int guestId;
@@ -42,7 +43,6 @@
         public string checkInDate;
         public int totalNights;
         public double pricePerNight;
-
 
         // Constructor
         public Guest(int id, string name, int room, string date, int nights, double price)
@@ -55,8 +55,7 @@
             pricePerNight = price;
         }
 
-
-        // Method to display guest details
+        // Display guest details
         public void displayGuest()
         {
             Console.WriteLine("Guest ID: " + guestId);
@@ -64,27 +63,131 @@
             Console.WriteLine("Room Number: " + roomNumber);
             Console.WriteLine("Check In Date: " + checkInDate);
             Console.WriteLine("Total Nights: " + totalNights);
+            Console.WriteLine("Total Cost: " + calculateTotalCost());
+        }
 
-
-            // Method to calculate total cost
-            public double calculateTotalCost()
+        // Calculate total cost
+        public double calculateTotalCost()
         {
             return totalNights * pricePerNight;
         }
+    }
 
-        internal class Program
-    {-
-       
-        
-        
-
-
-
-
+    // --------------------------------------------------------------
+    // Program Class
+    // --------------------------------------------------------------
+    internal class Program
+    {
+        static List<Room> rooms = new List<Room>();
+        static List<Guest> guests = new List<Guest>();
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            LoadRooms();
+
+            int choice;
+
+            do
+            {
+                Console.WriteLine("\n==============================");
+                Console.WriteLine(" GRAND VISTA HOTEL SYSTEM");
+                Console.WriteLine("==============================");
+                Console.WriteLine("1. Add New Room");
+                Console.WriteLine("2. Register New Guest");
+                Console.WriteLine("3. Book a Room");
+                Console.WriteLine("4. View All Rooms");
+                Console.WriteLine("5. View All Guests");
+                Console.WriteLine("0. Exit");
+
+                Console.Write("Choice: ");
+
+                if (!int.TryParse(Console.ReadLine(), out choice))
+                {
+                    Console.WriteLine("Invalid input.");
+                    continue;
+                }
+
+                switch (choice)
+                {
+                    case 1:
+                        // AddRoom();
+                        Console.WriteLine("Add Room feature coming soon.");
+                        break;
+
+                    case 2:
+                        // AddGuest();
+                        Console.WriteLine("Register Guest feature coming soon.");
+                        break;
+
+                    case 3:
+                        Console.WriteLine("Book Room feature coming soon.");
+                        break;
+
+                    case 4:
+                        ViewRooms();
+                        break;
+
+                    case 5:
+                        ViewGuests();
+                        break;
+
+                    case 0:
+                        Console.WriteLine("Goodbye!");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+
+            } while (choice != 0);
+        }
+
+        // --------------------------------------------------------------
+        // Load Sample Rooms
+        // --------------------------------------------------------------
+        static void LoadRooms()
+        {
+            rooms.Add(new Room(101, "Single", 20, true));
+            rooms.Add(new Room(102, "Double", 35, true));
+            rooms.Add(new Room(103, "Suite", 80, true));
+            rooms.Add(new Room(104, "Single", 25, true));
+            rooms.Add(new Room(105, "Double", 45, true));
+            rooms.Add(new Room(106, "Suite", 100, true));
+        }
+
+        // --------------------------------------------------------------
+        // View All Rooms
+        // --------------------------------------------------------------
+        static void ViewRooms()
+        {
+            Console.WriteLine("\n----- Rooms -----");
+
+            foreach (Room room in rooms)
+            {
+                room.displayRoom();
+                Console.WriteLine("---------------------------");
+            }
+        }
+
+        // --------------------------------------------------------------
+        // View All Guests
+        // --------------------------------------------------------------
+        static void ViewGuests()
+        {
+            Console.WriteLine("\n----- Guests -----");
+
+            if (guests.Count == 0)
+            {
+                Console.WriteLine("No guests registered.");
+                return;
+            }
+
+            foreach (Guest guest in guests)
+            {
+                guest.displayGuest();
+                Console.WriteLine("---------------------------");
+            }
         }
     }
 }
