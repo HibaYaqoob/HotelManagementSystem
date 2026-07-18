@@ -118,7 +118,7 @@ namespace Task8
                         break;
 
                     case 3:
-                        Console.WriteLine("Book Room feature coming soon.");
+                        BookRoom();
                         break;
 
                     case 4:
@@ -297,6 +297,78 @@ namespace Task8
             Console.WriteLine("Total Nights: " + newGuest.totalNights);
             Console.WriteLine("Room Number: Not Assigned");
             Console.WriteLine("Total Guests: " + guests.Count());
+        }
+
+        // --------------------------------------------------------------
+        // Case 3: Book Room for Guest
+        // --------------------------------------------------------------
+        static void BookRoom()
+        {
+            Console.WriteLine("\n----- Book Room -----");
+
+
+            // Enter Guest ID
+            Console.Write("Enter guest ID (Example: G001): ");
+            string guestId = Console.ReadLine();
+
+
+            // Enter Room Number
+            Console.Write("Enter room number: ");
+            int roomNumber;
+
+            if (!int.TryParse(Console.ReadLine(), out roomNumber))
+            {
+                Console.WriteLine("Invalid room number.");
+                return;
+            }
+
+
+            // Find guest using LINQ FirstOrDefault()
+            Guest guest = guests.FirstOrDefault(g => g.guestId == guestId);
+
+
+            if (guest == null)
+            {
+                Console.WriteLine("Error: Guest not found.");
+                return;
+            }
+
+
+            // Find room using LINQ FirstOrDefault()
+            Room room = rooms.FirstOrDefault(r => r.roomNumber == roomNumber);
+
+
+            if (room == null)
+            {
+                Console.WriteLine("Error: Room not found.");
+                return;
+            }
+
+
+            // Check room availability
+            if (!room.isAvailable)
+            {
+                Console.WriteLine("Room is already booked.");
+                return;
+            }
+
+
+            // Update objects in the lists
+            guest.roomNumber = room.roomNumber;
+            guest.pricePerNight = room.pricePerNight;
+
+            room.isAvailable = false;
+
+
+            // Booking confirmation
+            Console.WriteLine("\nBooking successful!");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("Guest Name: " + guest.guestName);
+            Console.WriteLine("Room Number: " + room.roomNumber);
+            Console.WriteLine("Room Type: " + room.roomType);
+            Console.WriteLine("Price Per Night: " + room.pricePerNight);
+            Console.WriteLine("Total Nights: " + guest.totalNights);
+            Console.WriteLine("Total Cost: " + guest.calculateTotalCost());
         }
 
         // --------------------------------------------------------------
