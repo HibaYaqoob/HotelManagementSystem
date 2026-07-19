@@ -106,6 +106,7 @@ namespace Task8
                 Console.WriteLine("12. Remove Unavailable Rooms");
                 Console.WriteLine("13. Extend Guest Stay");
                 Console.WriteLine("14. Highest Revenue Booking");
+                Console.WriteLine("15. Guest Pagination Viewer");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -165,7 +166,9 @@ namespace Task8
                     case 14:
                         HighestRevenueBooking();
                         break;
-                        
+                    case 15:
+                        GuestPaginationViewer();
+                        break;
                     case 0:
                         Console.WriteLine("Goodbye!");
                         break;
@@ -1125,7 +1128,73 @@ namespace Task8
             }
         }
 
+        // --------------------------------------------------------------
+        // Case 15: Guest Pagination Viewer
+        // --------------------------------------------------------------
+        static void GuestPaginationViewer()
+        {
+            Console.WriteLine("\n===== GUEST PAGINATION VIEWER =====");
 
+            int pageSize = 3; // 3 guests per page
+
+            Console.Write("Enter page number: ");
+
+            int pageNumber;
+
+            if (!int.TryParse(Console.ReadLine(), out pageNumber)
+                || pageNumber <= 0)
+            {
+                Console.WriteLine("Invalid page number.");
+                return;
+            }
+
+
+            // Calculate total pages using Count()
+            int totalGuests = guests.Count();
+
+            int totalPages = (int)Math.Ceiling(
+                totalGuests / (double)pageSize);
+
+
+            // Check page range
+            if (pageNumber > totalPages || totalPages == 0)
+            {
+                Console.WriteLine("That page does not exist.");
+                return;
+            }
+
+
+            // Use Skip() and Take()
+            var pageGuests = guests
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+
+            Console.WriteLine("\nPage "
+                + pageNumber
+                + " of "
+                + totalPages);
+
+            Console.WriteLine("-----------------------------");
+
+
+            foreach (Guest guest in pageGuests)
+            {
+                Console.WriteLine("Guest ID: " + guest.guestId);
+                Console.WriteLine("Guest Name: " + guest.guestName);
+
+                if (guest.roomNumber == 0)
+                {
+                    Console.WriteLine("Room: Not Assigned");
+                }
+                else
+                {
+                    Console.WriteLine("Room Number: " + guest.roomNumber);
+                }
+
+                Console.WriteLine("-----------------------------");
+            }
+        }
     }
 
 }
