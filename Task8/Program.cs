@@ -103,6 +103,7 @@ namespace Task8
                 Console.WriteLine("9. Guest Lookup by Name");
                 Console.WriteLine("10. Room Type Breakdown Report");
                 Console.WriteLine("11. Check Out a Guest");
+                Console.WriteLine("12. Remove Unavailable Rooms");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -152,6 +153,9 @@ namespace Task8
                         break;
                     case 11:
                         CheckOutGuest();
+                        break;
+                    case 12:
+                        RemoveUnavailableRooms();
                         break;
 
                     case 0:
@@ -921,6 +925,90 @@ namespace Task8
             Console.WriteLine("\nUpdated Counts:");
             Console.WriteLine("Total Guests: " + guests.Count());
             Console.WriteLine("Total Rooms: " + rooms.Count());
+        }
+
+        // --------------------------------------------------------------
+        // Case 12: Remove Unavailable Rooms
+        // --------------------------------------------------------------
+        static void RemoveUnavailableRooms()
+        {
+            Console.WriteLine("\n===== REMOVE UNAVAILABLE ROOMS =====");
+
+
+            // Find removable rooms using LINQ
+            var removableRooms = rooms
+                .Where(r => !r.isAvailable &&
+                            !guests.Any(g => g.roomNumber == r.roomNumber))
+                .OrderBy(r => r.roomNumber);
+
+
+            // Check if there are no rooms
+            if (!removableRooms.Any())
+            {
+                Console.WriteLine(
+                    "All unavailable rooms are currently occupied. No rooms can be decommissioned.");
+                return;
+            }
+
+
+            // Display preview
+            Console.WriteLine("\nRooms Available for Removal:");
+
+            foreach (Room room in removableRooms)
+            {
+                Console.WriteLine("-------------------------");
+                Console.WriteLine("Room Number: " + room.roomNumber);
+                Console.WriteLine("Room Type: " + room.roomType);
+                Console.WriteLine("Price: OMR "
+                    + room.pricePerNight.ToString("F2"));
+            }
+
+
+            Console.WriteLine("\nTotal removable rooms: "
+                + removableRooms.Count());
+
+
+            // Confirmation
+            Console.Write("\nConfirm removal? (Y/N): ");
+            string answer = Console.ReadLine();
+
+
+            if (answer.ToUpper() != "Y")
+            {
+                Console.WriteLine("Removal cancelled. No changes made.");
+                return;
+            }
+
+
+            // Remove rooms using RemoveAll()
+            rooms.RemoveAll(r =>
+                !r.isAvailable &&
+                !guests.Any(g => g.roomNumber == r.roomNumber));
+
+
+            Console.WriteLine("\nRooms removed successfully.");
+
+            Console.WriteLine("Updated Total Rooms: "
+                + rooms.Count());
+
+
+            // Display remaining rooms using Select()
+            Console.WriteLine("\nRemaining Rooms:");
+
+            var remainingRooms = rooms.Select(r =>
+                new
+                {
+                    Number = r.roomNumber,
+                    Type = r.roomType
+                });
+
+
+            foreach (var room in remainingRooms)
+            {
+                Console.WriteLine(
+                    "Room " + room.Number +
+                    " - " + room.Type);
+            }
         }
     }
 
