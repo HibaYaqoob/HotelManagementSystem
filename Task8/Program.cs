@@ -1015,7 +1015,7 @@ namespace Task8
         }
 
         // --------------------------------------------------------------
-        // Case 14: Extend Guest Stay
+        // Case 13: Extend Guest Stay
         // --------------------------------------------------------------
         static void ExtendGuestStay()
         {
