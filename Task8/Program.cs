@@ -101,6 +101,7 @@ namespace Task8
                 Console.WriteLine("7. Guest & Booking Statistics");
                 Console.WriteLine("8. Update Room Price");
                 Console.WriteLine("9. Guest Lookup by Name");
+                Console.WriteLine("10. Room Type Breakdown Report");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -145,7 +146,9 @@ namespace Task8
                     case 9:
                         GuestLookupByName();
                         break;
-
+                    case 10:
+                        RoomTypeBreakdownReport();
+                        break;
 
                     case 0:
                         Console.WriteLine("Goodbye!");
@@ -744,6 +747,73 @@ namespace Task8
                 else
                     Console.WriteLine("Room Number: " + guest.roomNumber);
             }
+        }
+
+        // -------------------------------------------------------------------------------
+        // Case 10: Room Type Breakdown Report
+        // -------------------------------------------------------------------------------
+
+        static void RoomTypeBreakdownReport()
+        {
+            Console.WriteLine("\n===== ROOM TYPE BREAKDOWN REPORT =====");
+
+            // ---------- Single ----------
+            int singleCount = rooms.Count(r => r.roomType == "Single");
+
+            Console.WriteLine("\nSingle Rooms");
+            Console.WriteLine("Count: " + singleCount);
+
+            if (singleCount > 0)
+            {
+                Console.WriteLine("Average Price: OMR "
+                    + rooms.Where(r => r.roomType == "Single")
+                           .Average(r => r.pricePerNight)
+                           .ToString("F2"));
+            }
+            else
+            {
+                Console.WriteLine("Average Price: N/A");
+            }
+
+            // ---------- Double ----------
+            int doubleCount = rooms.Count(r => r.roomType == "Double");
+
+            Console.WriteLine("\nDouble Rooms");
+            Console.WriteLine("Count: " + doubleCount);
+
+            if (doubleCount > 0)
+            {
+                Console.WriteLine("Average Price: OMR "
+                    + rooms.Where(r => r.roomType == "Double")
+                           .Average(r => r.pricePerNight)
+                           .ToString("F2"));
+            }
+            else
+            {
+                Console.WriteLine("Average Price: N/A");
+            }
+
+            // ---------- Suite ----------
+            int suiteCount = rooms.Count(r => r.roomType == "Suite");
+
+            Console.WriteLine("\nSuite Rooms");
+            Console.WriteLine("Count: " + suiteCount);
+
+            if (suiteCount > 0)
+            {
+                Console.WriteLine("Average Price: OMR "
+                    + rooms.Where(r => r.roomType == "Suite")
+                           .Average(r => r.pricePerNight)
+                           .ToString("F2"));
+            }
+            else
+            {
+                Console.WriteLine("Average Price: N/A");
+            }
+
+            // ---------- Overall Average ----------
+            Console.WriteLine("\nOverall Average Price: OMR "
+                + rooms.Average(r => r.pricePerNight).ToString("F2"));
         }
 
     }
