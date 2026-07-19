@@ -105,6 +105,7 @@ namespace Task8
                 Console.WriteLine("11. Check Out a Guest");
                 Console.WriteLine("12. Remove Unavailable Rooms");
                 Console.WriteLine("13. Extend Guest Stay");
+                Console.WriteLine("14. Highest Revenue Booking");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -159,8 +160,12 @@ namespace Task8
                         RemoveUnavailableRooms();
                         break;
                     case 13:
-                        ExtendGuestStay();
+                        ExtendGuestStay(); 
                         break;
+                    case 14:
+                        HighestRevenueBooking();
+                        break;
+                        
                     case 0:
                         Console.WriteLine("Goodbye!");
                         break;
@@ -1074,6 +1079,50 @@ namespace Task8
                 + guest.totalNights);
             Console.WriteLine("New Total Cost: OMR "
                 + guest.calculateTotalCost().ToString("F2"));
+        }
+
+
+        // --------------------------------------------------------------
+        // Case 14: Highest Revenue Booking
+        // --------------------------------------------------------------
+        static void HighestRevenueBooking()
+        {
+            Console.WriteLine("\n===== HIGHEST REVENUE BOOKING =====");
+
+
+            // Filter active bookings
+            var activeBookings = guests
+                .Where(g => g.roomNumber != 0);
+
+
+            if (!activeBookings.Any())
+            {
+                Console.WriteLine("No active bookings recorded.");
+                return;
+            }
+
+
+            // Select required data and sort by total cost
+            var highestBooking = activeBookings
+                .Select(g => new
+                {
+                    Name = g.guestName,
+                    Room = g.roomNumber,
+                    TotalCost = g.calculateTotalCost()
+                })
+                .OrderByDescending(g => g.TotalCost)
+                .Take(1);
+
+
+            foreach (var booking in highestBooking)
+            {
+                Console.WriteLine("\nTop Revenue Booking");
+                Console.WriteLine("-------------------");
+                Console.WriteLine("Guest Name: " + booking.Name);
+                Console.WriteLine("Room Number: " + booking.Room);
+                Console.WriteLine("Total Cost: OMR "
+                    + booking.TotalCost.ToString("F2"));
+            }
         }
 
 
