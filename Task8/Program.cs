@@ -98,6 +98,7 @@ namespace Task8
                 Console.WriteLine("4. View All Rooms");
                 Console.WriteLine("5. View All Guests");
                 Console.WriteLine("6. Search & Filter Rooms");
+                Console.WriteLine("7. Guest & Booking Statistics");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -133,6 +134,11 @@ namespace Task8
                     case 6:
                         SearchRooms();
                         break;
+                    case 7:
+                        GuestBookingStatistics();
+                        break;
+
+
 
                     case 0:
                         Console.WriteLine("Goodbye!");
@@ -580,9 +586,78 @@ namespace Task8
         }
 
         // -----------------------------------------------------------------
-        // Case 7: 
+        // Case 7: Guest Booking Statistics
         // -----------------------------------------------------------------
+        static void GuestBookingStatistics()
+        {
+            Console.WriteLine("\n===== GUEST & BOOKING STATISTICS =====");
 
+            // Total guests
+            Console.WriteLine("Total Registered Guests: " + guests.Count());
+
+            // Guests with active bookings
+            Console.WriteLine("Guests With Bookings: "
+                + guests.Count(g => g.roomNumber != 0));
+
+            // Total rooms
+            Console.WriteLine("Total Rooms: " + rooms.Count());
+
+            // Booked rooms
+            Console.WriteLine("Booked Rooms: "
+                + rooms.Count(r => !r.isAvailable));
+
+            // Check if there are active bookings
+            if (!guests.Any(g => g.roomNumber != 0))
+            {
+                Console.WriteLine("\nNo active bookings recorded.");
+                return;
+            }
+
+            // Average nights
+            double averageNights = guests
+                .Where(g => g.roomNumber != 0)
+                .Average(g => g.totalNights);
+
+            Console.WriteLine("Average Nights: "
+                + averageNights.ToString("F2"));
+
+            // Top 3 highest spending guests
+            Console.WriteLine("\nTop 3 Highest Spending Guests");
+
+            var topGuests = guests
+                .Where(g => g.roomNumber != 0)
+                .OrderByDescending(g => g.calculateTotalCost())
+                .Take(3);
+
+            foreach (Guest guest in topGuests)
+            {
+                Console.WriteLine(
+                    guest.guestName
+                    + " | Room "
+                    + guest.roomNumber
+                    + " | OMR "
+                    + guest.calculateTotalCost().ToString("F2"));
+            }
+
+            // Guest Summary
+            Console.WriteLine("\nGuest Booking Summary");
+
+            var summaries = guests
+                .Where(g => g.roomNumber != 0)
+                .Select(g =>
+                    g.guestName
+                    + " - Room "
+                    + g.roomNumber
+                    + " - "
+                    + g.totalNights
+                    + " nights - OMR "
+                    + g.calculateTotalCost().ToString("F2"));
+
+            foreach (string summary in summaries)
+            {
+                Console.WriteLine(summary);
+            }
+        }
 
 
 
