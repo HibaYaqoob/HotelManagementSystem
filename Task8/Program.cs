@@ -99,6 +99,7 @@ namespace Task8
                 Console.WriteLine("5. View All Guests");
                 Console.WriteLine("6. Search & Filter Rooms");
                 Console.WriteLine("7. Guest & Booking Statistics");
+                Console.WriteLine("8. Update Room Price");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -137,7 +138,9 @@ namespace Task8
                     case 7:
                         GuestBookingStatistics();
                         break;
-
+                    case 8:
+                        UpdateRoomPrice();
+                        break;
 
 
                     case 0:
@@ -659,7 +662,51 @@ namespace Task8
             }
         }
 
+        // -----------------------------------------------------------------
+        // Case 8: Update Room Price
+        // -----------------------------------------------------------------
 
+        static void UpdateRoomPrice()
+        {
+            Console.WriteLine("\n===== UPDATE ROOM PRICE =====");
+
+            Console.Write("Enter room number: ");
+
+            int roomNumber;
+
+            if (!int.TryParse(Console.ReadLine(), out roomNumber))
+            {
+                Console.WriteLine("Invalid room number.");
+                return;
+            }
+
+            Room room = rooms.FirstOrDefault(r => r.roomNumber == roomNumber);
+
+            if (room == null)
+            {
+                Console.WriteLine("Room not found.");
+                return;
+            }
+
+            Console.Write("Enter new price per night: ");
+
+            double newPrice;
+
+            if (!double.TryParse(Console.ReadLine(), out newPrice) || newPrice <= 0)
+            {
+                Console.WriteLine("Invalid price.");
+                return;
+            }
+
+            double oldPrice = room.pricePerNight;
+
+            room.pricePerNight = newPrice;
+
+            Console.WriteLine("\nRoom price updated successfully.");
+            Console.WriteLine("Room Number: " + room.roomNumber);
+            Console.WriteLine("Old Price: OMR " + oldPrice.ToString("F2"));
+            Console.WriteLine("New Price: OMR " + room.pricePerNight.ToString("F2"));
+        }
 
 
     }
