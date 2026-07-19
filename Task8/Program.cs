@@ -102,6 +102,7 @@ namespace Task8
                 Console.WriteLine("8. Update Room Price");
                 Console.WriteLine("9. Guest Lookup by Name");
                 Console.WriteLine("10. Room Type Breakdown Report");
+                Console.WriteLine("11. Check Out a Guest");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -148,6 +149,9 @@ namespace Task8
                         break;
                     case 10:
                         RoomTypeBreakdownReport();
+                        break;
+                    case 11:
+                        CheckOutGuest();
                         break;
 
                     case 0:
@@ -816,6 +820,108 @@ namespace Task8
                 + rooms.Average(r => r.pricePerNight).ToString("F2"));
         }
 
+
+        // -------------------------------------------------------------------------------
+        // Case 11: Check Out Guest
+        // -------------------------------------------------------------------------------
+       
+        static void CheckOutGuest()
+        {
+            Console.WriteLine("\n===== CHECK OUT GUEST =====");
+
+            // Ask for Guest ID
+            Console.Write("Enter guest ID (Example: G001): ");
+            string guestId = Console.ReadLine();
+
+
+            // Find guest using FirstOrDefault()
+            Guest guest = guests.FirstOrDefault(g => g.guestId == guestId);
+
+
+            if (guest == null)
+            {
+                Console.WriteLine("Error: Guest not found.");
+                return;
+            }
+
+
+            // Check active booking
+            if (guest.roomNumber == 0)
+            {
+                Console.WriteLine("This guest has no active booking.");
+                return;
+            }
+
+
+            // Find room using second FirstOrDefault()
+            Room room = rooms.FirstOrDefault(r =>
+                r.roomNumber == guest.roomNumber);
+
+
+            if (room == null)
+            {
+                Console.WriteLine("Error: Room not found.");
+                return;
+            }
+
+
+            // Display final bill
+            Console.WriteLine("\n========== FINAL BILL ==========");
+            Console.WriteLine("Guest Name: " + guest.guestName);
+            Console.WriteLine("Room Number: " + room.roomNumber);
+            Console.WriteLine("Room Type: " + room.roomType);
+            Console.WriteLine("Check-in Date: " + guest.checkInDate);
+            Console.WriteLine("Total Nights: " + guest.totalNights);
+            Console.WriteLine("Price Per Night: OMR "
+                + room.pricePerNight.ToString("F2"));
+            Console.WriteLine("Total Cost: OMR "
+                + guest.calculateTotalCost().ToString("F2"));
+            Console.WriteLine("================================");
+
+
+            // Confirmation
+            Console.Write("\nConfirm checkout? (Y/N): ");
+            string answer = Console.ReadLine();
+
+
+            if (answer.ToUpper() != "Y")
+            {
+                Console.WriteLine("Checkout cancelled. No changes made.");
+                return;
+            }
+
+
+            // Free the room first
+            room.isAvailable = true;
+
+
+            // Remove guest
+            guests.Remove(guest);
+
+
+            // Summary
+            Console.WriteLine("\nCheckout completed successfully.");
+
+            Console.WriteLine("Guest removed: " + guest.guestName);
+
+            Console.WriteLine("Room " + room.roomNumber
+                + " is now available.");
+
+
+            // Confirm room availability using Any()
+            bool roomAvailable = rooms.Any(r =>
+                r.roomNumber == room.roomNumber &&
+                r.isAvailable);
+
+
+            Console.WriteLine("Room availability confirmed: "
+                + roomAvailable);
+
+
+            Console.WriteLine("\nUpdated Counts:");
+            Console.WriteLine("Total Guests: " + guests.Count());
+            Console.WriteLine("Total Rooms: " + rooms.Count());
+        }
     }
 
 }
