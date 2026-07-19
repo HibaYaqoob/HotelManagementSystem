@@ -104,6 +104,7 @@ namespace Task8
                 Console.WriteLine("10. Room Type Breakdown Report");
                 Console.WriteLine("11. Check Out a Guest");
                 Console.WriteLine("12. Remove Unavailable Rooms");
+                Console.WriteLine("13. Extend Guest Stay");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -157,7 +158,9 @@ namespace Task8
                     case 12:
                         RemoveUnavailableRooms();
                         break;
-
+                    case 13:
+                        ExtendGuestStay();
+                        break;
                     case 0:
                         Console.WriteLine("Goodbye!");
                         break;
@@ -1010,6 +1013,70 @@ namespace Task8
                     " - " + room.Type);
             }
         }
+
+        // --------------------------------------------------------------
+        // Case 14: Extend Guest Stay
+        // --------------------------------------------------------------
+        static void ExtendGuestStay()
+        {
+            Console.WriteLine("\n===== EXTEND GUEST STAY =====");
+
+
+            // Ask for guest ID
+            Console.Write("Enter guest ID (Example: G001): ");
+            string guestId = Console.ReadLine();
+
+
+            // Find guest using FirstOrDefault()
+            Guest guest = guests.FirstOrDefault(g => g.guestId == guestId);
+
+
+            if (guest == null)
+            {
+                Console.WriteLine("Error: Guest not found.");
+                return;
+            }
+
+
+            // Check active booking
+            if (guest.roomNumber == 0)
+            {
+                Console.WriteLine("This guest has no active booking to extend.");
+                return;
+            }
+
+
+            // Ask for additional nights
+            Console.Write("Enter additional nights: ");
+
+            int additionalNights;
+
+
+            if (!int.TryParse(Console.ReadLine(), out additionalNights)
+                || additionalNights <= 0)
+            {
+                Console.WriteLine(
+                    "Invalid number of nights. Must be a positive integer.");
+                return;
+            }
+
+
+            // Update guest object in place
+            guest.totalNights += additionalNights;
+
+
+            // Display updated information
+            Console.WriteLine("\nStay extended successfully!");
+            Console.WriteLine("---------------------------");
+            Console.WriteLine("Guest Name: " + guest.guestName);
+            Console.WriteLine("Room Number: " + guest.roomNumber);
+            Console.WriteLine("Updated Total Nights: "
+                + guest.totalNights);
+            Console.WriteLine("New Total Cost: OMR "
+                + guest.calculateTotalCost().ToString("F2"));
+        }
+
+
     }
 
 }
