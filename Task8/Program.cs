@@ -100,6 +100,7 @@ namespace Task8
                 Console.WriteLine("6. Search & Filter Rooms");
                 Console.WriteLine("7. Guest & Booking Statistics");
                 Console.WriteLine("8. Update Room Price");
+                Console.WriteLine("9. Guest Lookup by Name");
                 Console.WriteLine("0. Exit");
 
                 Console.Write("Choice: ");
@@ -140,6 +141,9 @@ namespace Task8
                         break;
                     case 8:
                         UpdateRoomPrice();
+                        break;
+                    case 9:
+                        GuestLookupByName();
                         break;
 
 
@@ -708,6 +712,39 @@ namespace Task8
             Console.WriteLine("New Price: OMR " + room.pricePerNight.ToString("F2"));
         }
 
+        // -------------------------------------------------------------------------------
+        // Case 9: Guest Lookup by Name
+        // -------------------------------------------------------------------------------
+        static void GuestLookupByName()
+        {
+            Console.WriteLine("\n===== GUEST LOOKUP BY NAME =====");
+
+            Console.Write("Enter guest name or part of the name: ");
+            string searchText = Console.ReadLine();
+
+            var matchingGuests = guests.Where(g =>
+                g.guestName.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+
+            if (matchingGuests.Count() == 0)
+            {
+                Console.WriteLine("No guests matched that search.");
+                return;
+            }
+
+            Console.WriteLine("\nNumber of matches: " + matchingGuests.Count());
+
+            foreach (Guest guest in matchingGuests)
+            {
+                Console.WriteLine("----------------------------");
+                Console.WriteLine("Guest ID: " + guest.guestId);
+                Console.WriteLine("Guest Name: " + guest.guestName);
+
+                if (guest.roomNumber == 0)
+                    Console.WriteLine("Room Number: Not Assigned");
+                else
+                    Console.WriteLine("Room Number: " + guest.roomNumber);
+            }
+        }
 
     }
 
